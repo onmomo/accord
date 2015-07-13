@@ -16,9 +16,9 @@
 
 package com.wix.accord.tests.dsl
 
+import com.wix.accord.Validator
 import com.wix.accord.scalatest.ResultMatchers
-import org.scalatest.{WordSpec, Matchers}
-import com.wix.accord.{Success, Validator}
+import org.scalatest.{Matchers, WordSpec}
 
 class StringOpsTests extends WordSpec with Matchers with ResultMatchers {
   import StringOpsTests._
@@ -86,6 +86,7 @@ class StringOpsTests extends WordSpec with Matchers with ResultMatchers {
     "successfully validate an incorrect string based on a java.util.regex.Pattern" in {
       "tests galore" validatedWith matchRegexFullyByPatternValidator should be( aFailure )
     }
+  }
 }
 
 object StringOpsTests {
