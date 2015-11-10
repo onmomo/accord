@@ -38,6 +38,11 @@ class OptionOpsTests extends WordSpec with Matchers with ResultMatchers {
     "fail on Some that does not match the predicate" in {
       Some( "some string" ) validatedWith eachValidator should be( aFailure )
     }
+    "fail on Some that does not match the predicate with description" in {
+      // BUG: this should fail with "description" as description text and not Some(o)
+      val matchByDescription = RuleViolationMatcher(description = "description")
+      Some( "some string" ) validatedWith eachValidatorDescription should failWith(matchByDescription)
+    }
   }
 
   "empty" should {
@@ -46,6 +51,11 @@ class OptionOpsTests extends WordSpec with Matchers with ResultMatchers {
     }
     "fail on Some" in {
       Some( "test" ) validatedWith emptyValidator should be( aFailure )
+    }
+    "fail on Some with description" in {
+      // Here it works as intended
+      val matchByDescription = RuleViolationMatcher(description = "description")
+      Some( "test" ) validatedWith emptyValidatorDescription should failWith(matchByDescription)
     }
   }
 
@@ -76,7 +86,9 @@ object OptionOpsTests {
 
   import com.wix.accord.dsl._
   val eachValidator = validator[ Test ] {  _.o.each should startWith( "test" ) }
+  val eachValidatorDescription = validator[ Test ] {  _.o.each as "description" should startWith( "test" ) }
   val emptyValidator = validator[ Test ] {  _.o is empty }
+  val emptyValidatorDescription = validator[ Test ] {  _.o as "description" is empty }
   val notEmptyValidator = validator[ Test ] {  _.o is notEmpty }
   val explicitGetValidator = validator[ Test ] { _.o.get should startWith( "test" ) }
 }
